@@ -5,6 +5,7 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +46,12 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) {
         try {
-            String query = String.format("INSERT INTO users (name, lastName, age) VALUES ('%s', '%s', %d)", name, lastName, age);
-            executor.execUpdate(query);
+            String query = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, name);
+            ps.setString(2, lastName);
+            ps.setByte(3, age);
+            ps.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error INSERT: " + e.getMessage());
         }
