@@ -64,6 +64,11 @@ public class UserDaoHibernateImpl implements UserDao {
     }
 
     @Override
+    public List<User> getUsersWhoseAgeBetween(int startAge, int finishAge) {
+        return null;
+    }
+
+    @Override
     public void cleanUsersTable() {
         Session session = sessionFactory.openSession();
         session.createQuery("DELETE FROM User").executeUpdate();

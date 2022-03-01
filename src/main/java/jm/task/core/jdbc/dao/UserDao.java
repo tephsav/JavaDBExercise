@@ -15,5 +15,7 @@ public interface UserDao {
 
     List<User> getAllUsers();
 
+    List<User> getUsersWhoseAgeBetween(int startAge, int finishAge);
+
     void cleanUsersTable();
 }

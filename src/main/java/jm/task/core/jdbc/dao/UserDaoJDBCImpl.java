@@ -4,9 +4,7 @@ import jm.task.core.jdbc.executor.Executor;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +80,47 @@ public class UserDaoJDBCImpl implements UserDao {
             });
         } catch (SQLException e) {
             System.out.println("Error SELECT: " + e.getMessage());
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getUsersWhoseAgeBetween(int startAge, int finishAge) {
+        /*
+            User procedure "getPeopleWhoseAgeBetween" in MySQL:
+
+            DELIMITER ||
+
+            CREATE PROCEDURE getPeopleWhoseAgeBetween (starting_age TINYINT, final_age TINYINT)
+            COMMENT 'Return people, whose age between starting_age AND final_age'
+            BEGIN
+                SELECT * FROM users WHERE age BETWEEN starting_age AND final_age;
+            END;
+            ||
+            DELIMITER ;
+        */
+
+        List<User> users = new ArrayList<>();
+        try {
+            CallableStatement callableStatement = connection.prepareCall("{CALL getPeopleWhoseAgeBetween(?, ?)}");
+            callableStatement.setByte(1, (byte) startAge);
+            callableStatement.setByte (2, (byte) finishAge);
+            ResultSet result = callableStatement.executeQuery();
+
+            while (result.next()) {
+                Long id = result.getLong(1);
+                String name = result.getString(2);
+                String lastName = result.getString(3);
+                Byte age = result.getByte(4);
+                User user = new User(name, lastName, age);
+                user.setId(id);
+                users.add(user);
+            }
+
+            result.close();
+            callableStatement.close();
+        } catch (SQLException e) {
+            System.out.println("Error CallableStatement: " + e.getMessage());
         }
         return users;
     }

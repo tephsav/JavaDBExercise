@@ -22,7 +22,10 @@ public class Main {
             System.out.println("User с именем – " + user.getName() + " добавлен в базу данных");
         }
 
-        List<User> usersList = userService.getAllUsers();
+        int startAge = 20;
+        int finishAge = 40;
+
+        List<User> usersList = userService.getUsersWhoseAgeBetween(startAge, finishAge);
         for (User user : usersList) {
             System.out.println(user);
         }

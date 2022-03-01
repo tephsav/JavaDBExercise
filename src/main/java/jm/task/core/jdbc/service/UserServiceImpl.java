@@ -35,6 +35,10 @@ public class UserServiceImpl implements UserService {
         return userDao.getAllUsers();
     }
 
+    public List<User> getUsersWhoseAgeBetween(int startAge, int finishAge) {
+        return userDao.getUsersWhoseAgeBetween(startAge, finishAge);
+    }
+
     public void cleanUsersTable() {
         userDao.cleanUsersTable();
     }
